@@ -39,6 +39,7 @@ void Player::Update()
 	//int型でキャストすることで小数点を切り捨てるから
 	//アニメーションがゆっくりになる	
 	//m_polygon.SetUVRect((int)m_anime);
+	//m_polygon.SetUVRect(0);
 
 	//座標更新
 	Math::Matrix transMat = Math::Matrix::CreateTranslation(m_pos);
