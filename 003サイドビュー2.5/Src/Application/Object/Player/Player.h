@@ -15,4 +15,5 @@ private:
 	Math::Vector3 m_pos;
 	Math::Vector3 m_move;
 	float m_anime;
+	float m_gravity = 0;
 };
