@@ -125,7 +125,6 @@ void Player::PostUpdate()
 	//当たり判定をしたいタイプを設定
 	sphere.m_type = KdCollider::TypeGround;
 
-
 	m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius);
 
 	//球ガ当たったオブジェクトの情報を格納するリスト

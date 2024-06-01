@@ -27,7 +27,7 @@ void GameScene::Event()
 	if (m_player.expired() == false) { playerPos = m_player.lock()->GetPos(); }
 
 	m_camera = std::make_unique<KdCamera>();
-	Math::Vector3 cameraPos = { 2.5f,1.5f,-5.0f };
+	Math::Vector3 cameraPos = { 2.5f,2.5f,-5.0f };
 	Math::Matrix transMat = Math::Matrix::CreateTranslation(cameraPos + playerPos);
 	m_camera->SetCameraMatrix(transMat);
 
