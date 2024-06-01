@@ -1,10 +1,10 @@
 ﻿#pragma once
 
-class Stage:public KdGameObject
+class Cannon:public KdGameObject
 {
 public:
-	Stage() { Init(); };
-	~Stage()override {};
+	Cannon() { Init(); };
+	~Cannon()override {};
 
 	void DrawLit()override;
 	void Init()override;

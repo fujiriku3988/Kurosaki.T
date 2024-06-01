@@ -19,12 +19,12 @@ void BaseScene::PreUpdate()
 		}
 	}
 
+	// ↑の後には有効なオブジェクトだけのリストになっている
 	for (auto& obj : m_objList)
 	{
 		obj->PreUpdate();
 	}
 
-	// ↑の後には有効なオブジェクトだけのリストになっている
 }
 
 void BaseScene::Update()
@@ -54,11 +54,11 @@ void BaseScene::PreDraw()
 		// 現在のカメラ情報をシェーダーにセット
 		m_camera->SetToShader();
 	}
-
 	for (auto& obj : m_objList)
 	{
 		obj->PreDraw();
 	}
+	
 }
 
 void BaseScene::Draw()
