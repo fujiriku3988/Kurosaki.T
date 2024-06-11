@@ -85,6 +85,9 @@
     <Filter Include="Src\Application\Object\Cannon">
       <UniqueIdentifier>{c2f4b406-6070-4ca7-a260-214583522406}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Object\Enemy">
+      <UniqueIdentifier>{bf9f2cbb-ff40-4f76-8698-bf32c83ede6f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -261,6 +264,9 @@
     <ClInclude Include="Src\Application\Object\Cannon\Cannon.h">
       <Filter>Src\Application\Object\Cannon</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Object\Enemy\Enemy.h">
+      <Filter>Src\Application\Object\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -412,6 +418,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Cannon\Cannon.cpp">
       <Filter>Src\Application\Object\Cannon</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Enemy\Enemy.cpp">
+      <Filter>Src\Application\Object\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

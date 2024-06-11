@@ -23,3 +23,9 @@ void Cannon::Init()
 	m_pCollider = std::make_unique<KdCollider>();
 	m_pCollider->RegisterCollisionShape("CannonCollison",m_model,KdCollider::TypeGround);
 }
+
+void Cannon::DrawBright()
+{
+	//ライトブルーム
+	KdShaderManager::Instance().m_StandardShader.DrawModel(*m_model, m_mWorld);
+}

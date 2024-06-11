@@ -1,42 +1,43 @@
-﻿#include "Player.h"
+﻿#include "Enemy.h"
 #include"../../Scene/SceneManager.h"
 
-void Player::Update()
+void Enemy::Update()
 {
-	//移動処理
-	if (GetAsyncKeyState('A') & 0x8000)
-	{
-		//0.1だけだったらdouble型として認識される
-		//ので、末尾に℉をつける
-		m_pos.x -= 0.1f;
-		m_anime += 0.1;
+	//ポイントライト（天光源）
+	//最大１００個まで(もっと出したいなら先生に相談)
+	//毎フレーム追加する必要がある（毎フレームリセットされるため）
+	Math::Vector3 tmpPos = { 0,0.5,0 };
+	//																	↓色、↓半径	↓座標
+	KdShaderManager::Instance().WorkAmbientController().AddPointLight({ 3,3,3 }, 5, m_pos+tmpPos, true);
 
-	}
-	if (GetAsyncKeyState('D') & 0x8000)
+	if (m_goal >= 5)
 	{
-		m_pos.x += 0.1f;
-		m_anime += 0.1;
+		m_goal = 0;
+		m_dir *= -1;
 	}
-	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
-	{
-		m_gravity = -0.1f;
-	}
+	m_pos.x += m_movePow * m_dir;
+	m_goal += m_movePow;
+
 	//重力を反映
 	m_pos.y -= m_gravity;
 	m_gravity += 0.005f;
+
 	//アニメーション
-	//int Run[4] = { 24,25,24,26 };
-	////m_anime+= 0.1;
-	//m_polygon.SetUVRect(Run[(int)m_anime]);
-	//if (m_anime >= 4)
-	//{
-	//	m_anime = 0;
-	//}
-	m_polygon.SetUVRect(24);
+	int walk[4] = { 3,4,3,5 };
+	m_anime+= 0.05f;
+	m_polygon.SetUVRect(walk[(int)m_anime]);
+	if (m_anime >= 4)
+	{
+		m_anime = 0;
+	}
 }
 
-void Player::PostUpdate()
+void Enemy::PostUpdate()
 {
+	//自分自身の当たり判定エリア
+	m_pDebugWire->AddDebugSphere(m_pos + Math::Vector3{ 0,0.5f,0 }, 0.2f, kGreenColor);
+
+
 	//==========================================================
 	//当たり判定ステージ（レイ判定）
 	//==========================================================
@@ -62,13 +63,19 @@ void Player::PostUpdate()
 	ray.m_range = m_gravity + enableStepHigh;
 
 	//当たり判定をしたい対応を設定
-	ray.m_type = KdCollider::TypeGround;
+	ray.m_type = KdCollider::TypeGround ;
 
 	//レイに当たったオブジェクト情報
 	std::list<KdCollider::CollisionResult> retRayList;
 	//レイと当たり判定＜ここ大切＞
 	for (auto& obj : SceneManager::Instance().GetObjList())
 	{
+		//自分とは当たり判定をしない
+		if (obj.get() == this)
+		{
+			continue;
+		}
+
 		obj->Intersects(ray, &retRayList);
 	}
 
@@ -105,7 +112,7 @@ void Player::PostUpdate()
 	//球の半径を設定
 	sphere.m_sphere.Radius = 0.3f;
 	//当たり判定をしたいタイプを設定
-	sphere.m_type = KdCollider::TypeGround | KdCollider::TypeBump;
+	sphere.m_type = KdCollider::TypeGround;
 	m_pDebugWire->AddDebugSphere(sphere.m_sphere.Center, sphere.m_sphere.Radius);
 	//球が当たったオブジェクトの情報を格納するリスト
 	std::list<KdCollider::CollisionResult> retSphereList;
@@ -141,42 +148,34 @@ void Player::PostUpdate()
 
 	//座標更新
 	Math::Matrix _transMat;
+	Math::Matrix scaleMat;
 	_transMat = Math::Matrix::CreateTranslation(m_pos);
-	m_mWorld = _transMat;
-
+	scaleMat = Math::Matrix::CreateScale(m_dir,1,1);
+	m_mWorld = scaleMat * _transMat;
 }
 
-void Player::DrawLit()
+void Enemy::DrawLit()
 {
-	//ディゾルブ（溶けた感じの表現）
-	//ゼルダ(ブレワイ)とかで使ってたらしい
-	//m_pixelArtStyleをfalseにするとジワジワ溶けていく
-	//アニメーションしているときには使えない
-	//使うならアニメーションを止めてから使う
-	static float d = 0;
-	d += 0.001f;
-	if (d > 1)
-	{
-		d = 0.000f;
-	}
-	KdShaderManager::Instance().m_StandardShader.SetDissolve(d);
-
-	KdShaderManager::Instance().m_StandardShader.DrawPolygon(m_polygon, m_mWorld);
+	KdShaderManager::Instance().m_StandardShader.DrawPolygon(m_polygon,m_mWorld);
 }
 
-void Player::Init()
+void Enemy::Init()
 {
 	m_polygon.SetMaterial("Asset/Textures/char.png");
-	m_pos = {-10,0,0};
+	m_pos = { -20,0,0 };
 	//画像分割
 	m_polygon.SetSplit(6, 6);
 	//原点変更
 	m_polygon.SetPivot(KdSquarePolygon::PivotType::Center_Bottom);
 	//デバッグ用
 	m_pDebugWire = std::make_unique<KdDebugWireFrame>();
+	m_movePow = 0.01f;
+	//当たり判定を設定
+	m_pCollider = std::make_unique<KdCollider>();
+	m_pCollider->RegisterCollisionShape("EnemyCollision", { 0,0.5f,0 }, 0.2f, KdCollider::TypeBump);
 }
 
-void Player::GenerateDepthMapFromLight()
+void Enemy::GenerateDepthMapFromLight()
 {
 	KdShaderManager::Instance().m_StandardShader.DrawPolygon(m_polygon, m_mWorld);
 }

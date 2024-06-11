@@ -1,8 +1,7 @@
 ﻿#pragma once
-
 #include"../BaseScene/BaseScene.h"
 class Player;
-
+class Enemy;
 class GameScene : public BaseScene
 {
 public :

@@ -1,9 +1,9 @@
 ﻿#pragma once
-class Player:public KdGameObject
+class Enemy :public KdGameObject
 {
 public:
-	Player() { Init(); };
-	~Player()override {};
+	Enemy() { Init(); };
+	~Enemy()override {};
 
 	void Update()override;
 	void PostUpdate()override;
@@ -11,10 +11,15 @@ public:
 	void Init()override;
 	void GenerateDepthMapFromLight()override;
 
+	void SetPosE(const Math::Vector3& pos) { m_pos = pos; }
+
 private:
 	KdSquarePolygon m_polygon;
 	Math::Vector3 m_pos;
 	float m_anime = 0;
 	float m_gravity = 0;
+	float m_movePow;
+	float m_goal = 0;
+	int m_dir=1;
 };
 
