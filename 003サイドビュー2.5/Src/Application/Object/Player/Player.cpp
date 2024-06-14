@@ -112,7 +112,17 @@ void Player::PostUpdate()
 	//球と当たり判定！！！！！！
 	for (auto& obj : SceneManager::Instance().GetObjList())
 	{
-		obj->Intersects(sphere, &retSphereList);
+		//obj->Intersects(sphere, &retSphereList);
+		if (obj->Intersects(sphere, &retSphereList))
+		{
+			//当たってる
+			if (obj->GetObjType() == KdGameObject::Enemy)
+			{
+				//このIF文に入るということは
+				//敵と当たっている
+				obj->OnHit();
+			}
+		}
 	}
 	//球リストから一番近いオブジェクトを検出
 	maxOverLap = 0;		//はみ出た例の長さ

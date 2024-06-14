@@ -173,9 +173,16 @@ void Enemy::Init()
 	//当たり判定を設定
 	m_pCollider = std::make_unique<KdCollider>();
 	m_pCollider->RegisterCollisionShape("EnemyCollision", { 0,0.5f,0 }, 0.2f, KdCollider::TypeBump);
+	m_objType = KdGameObject::Enemy;
 }
 
 void Enemy::GenerateDepthMapFromLight()
 {
 	KdShaderManager::Instance().m_StandardShader.DrawPolygon(m_polygon, m_mWorld);
+}
+
+void Enemy::OnHit()
+{
+	//当たった（攻撃された）時に処理してほしいプログラム
+	m_isExpired = true;
 }

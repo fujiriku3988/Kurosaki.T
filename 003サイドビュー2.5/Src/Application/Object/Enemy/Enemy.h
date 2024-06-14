@@ -13,6 +13,8 @@ public:
 
 	void SetPosE(const Math::Vector3& pos) { m_pos = pos; }
 
+	void OnHit()override;
+
 private:
 	KdSquarePolygon m_polygon;
 	Math::Vector3 m_pos;
